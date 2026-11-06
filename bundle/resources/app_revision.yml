@@ -1,0 +1,27 @@
+# App de revisión humana (Databricks Apps, Streamlit). Usa el service principal de la app y el SQL warehouse.
+# Referencia: https://learn.microsoft.com/es-es/azure/databricks/dev-tools/databricks-apps/
+resources:
+  apps:
+    revision_indicadores:
+      name: revision-indicadores
+      description: "Revisión y aprobación de fichas de indicadores: duplicados, conflictos y fichas incompletas."
+      source_code_path: ../app
+      config:
+        command: [ "streamlit", "run", "app.py" ]
+        env:
+          - name: DATABRICKS_WAREHOUSE_ID
+            value_from: sql-warehouse
+          - name: CATALOGO
+            value: ${var.catalogo}
+          - name: PREFIJO_ESQUEMAS
+            value: ${var.prefijo_esquemas}
+          - name: STREAMLIT_GATHER_USAGE_STATS
+            value: "false"
+      resources:
+        - name: sql-warehouse
+          sql_warehouse:
+            id: ${var.warehouse_id}
+            permission: CAN_USE
+      permissions:
+        - group_name: ${var.grupo_aprobadores}
+          level: CAN_USE

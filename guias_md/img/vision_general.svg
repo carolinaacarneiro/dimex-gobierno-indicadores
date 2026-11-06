@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="174mm" height="83.3mm" viewBox="0 0 760 364" role="img" aria-label="Qué vamos a construir: del documento al indicador certificado">
+<title>Qué vamos a construir: del documento al indicador certificado</title>
+<defs><marker id="pn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1B3139"/></marker><marker id="pr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FF3621"/></marker></defs>
+<rect width="760" height="364" fill="#FFFFFF"/>
+<path d="M182.0,56.0 L204.0,56.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M368.0,56.0 L390.0,56.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M554.0,56.0 L576.0,56.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M659.0,98.0 L659.0,128.0 L120.0,128.0 L120.0,197.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M220.0,241.0 L250.0,241.0 L250.0,197.0 L278.0,197.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M480.0,197.0 L510.0,197.0 L510.0,241.0 L538.0,241.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M220.0,241.0 L250.0,241.0 L250.0,285.0 L278.0,285.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M480.0,285.0 L510.0,285.0 L510.0,241.0 L538.0,241.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<rect x="20" y="14" width="162" height="84" rx="7" fill="#EEEDE9" stroke="#8B9599" stroke-width="1.6"/>
+<text x="101.0" y="47.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Fichas PDF</text>
+<text x="101.0" y="61.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">plantilla v1.2</text>
+<text x="101.0" y="76.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">de cada área</text>
+<circle cx="24" cy="18" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="24.0" y="22.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+<rect x="206" y="14" width="162" height="84" rx="7" fill="#FFF1EE" stroke="#FF3621" stroke-width="1.6"/>
+<text x="287.0" y="47.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Lectura con IA</text>
+<text x="287.0" y="61.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">pipeline incremental</text>
+<text x="287.0" y="76.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">6 bloques → 40 campos</text>
+<circle cx="210" cy="18" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="210.0" y="22.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+<rect x="392" y="14" width="162" height="84" rx="7" fill="#FFF1EE" stroke="#FF3621" stroke-width="1.6"/>
+<text x="473.0" y="47.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Detección</text>
+<text x="473.0" y="61.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">duplicados y conflictos</text>
+<text x="473.0" y="76.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">búsqueda semántica + IA</text>
+<circle cx="396" cy="18" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="396.0" y="22.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+<rect x="578" y="14" width="162" height="84" rx="7" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.6"/>
+<text x="659.0" y="47.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Revisión humana</text>
+<text x="659.0" y="61.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">app para Data Owners</text>
+<text x="659.0" y="76.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">y Data Stewards</text>
+<circle cx="582" cy="18" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="582.0" y="22.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">4</text>
+<rect x="20" y="199" width="200" height="84" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="120.0" y="232.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Catálogo certificado</text>
+<text x="120.0" y="246.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">glosario, dominios</text>
+<text x="120.0" y="261.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">y etiquetas en UC</text>
+<rect x="280" y="162" width="200" height="70" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="380.0" y="188.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Vistas de métricas</text>
+<text x="380.0" y="202.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">fórmula, exclusiones</text>
+<text x="380.0" y="217.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">y dimensiones</text>
+<rect x="280" y="250" width="200" height="70" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="380.0" y="276.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Reglas de calidad</text>
+<text x="380.0" y="290.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">completitud, validez</text>
+<text x="380.0" y="305.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">y contingencia</text>
+<rect x="540" y="199" width="200" height="84" rx="7" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.6"/>
+<text x="640.0" y="231.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Genie, dashboard y alertas</text>
+<text x="640.0" y="245.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">preguntas en español,</text>
+<text x="640.0" y="260.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">seguimiento y avisos</text>
+<circle cx="24" cy="203" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="24.0" y="207.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">5</text>
+<circle cx="284" cy="166" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="284.0" y="170.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">6</text>
+<circle cx="284" cy="254" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="284.0" y="258.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">7</text>
+<circle cx="544" cy="203" r="11" fill="#FF3621" stroke="#FFFFFF" stroke-width="2"/>
+<text x="544.0" y="207.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">8</text>
+<rect x="20" y="342" width="22" height="14" rx="3" fill="#EEEDE9" stroke="#8B9599" stroke-width="1.4"/>
+<text x="48.0" y="353.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">Documento de origen</text>
+<rect x="195.60000000000002" y="342" width="22" height="14" rx="3" fill="#FFF1EE" stroke="#FF3621" stroke-width="1.4"/>
+<text x="223.6" y="353.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">Etapa con IA</text>
+<rect x="326.40000000000003" y="342" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.4"/>
+<text x="354.4" y="353.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">Objeto en Unity Catalog</text>
+<rect x="527.6" y="342" width="22" height="14" rx="3" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.4"/>
+<text x="555.6" y="353.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">App y consumo</text>
+</svg>

@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="174mm" height="188.2mm" viewBox="0 0 760 822" role="img" aria-label="Arquitectura de la solución de gobierno de indicadores">
+<title>Arquitectura de la solución de gobierno de indicadores</title>
+<defs><marker id="pn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1B3139"/></marker><marker id="pr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FF3621"/></marker></defs>
+<rect width="760" height="822" fill="#FFFFFF"/>
+<rect x="0" y="0" width="760" height="98" rx="8" fill="#F9F7F4"/>
+<circle cx="22" cy="14" r="10" fill="#FF3621"/>
+<text x="22.0" y="18.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+<text x="40.0" y="19.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1B3139" text-anchor="start">Recepción</text>
+<text x="740.0" y="19.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#5A6B71" text-anchor="end">las áreas depositan sus fichas</text>
+<rect x="0" y="114" width="760" height="98" rx="8" fill="#F3F1ED"/>
+<circle cx="22" cy="128" r="10" fill="#FF3621"/>
+<text x="22.0" y="132.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="40.0" y="133.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1B3139" text-anchor="start">Lectura con IA</text>
+<text x="740.0" y="133.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#5A6B71" text-anchor="end">pipeline declarativo serverless · incremental</text>
+<rect x="0" y="228" width="760" height="98" rx="8" fill="#F9F7F4"/>
+<circle cx="22" cy="242" r="10" fill="#FF3621"/>
+<text x="22.0" y="246.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+<text x="40.0" y="247.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1B3139" text-anchor="start">Detección</text>
+<rect x="0" y="342" width="760" height="98" rx="8" fill="#F3F1ED"/>
+<circle cx="22" cy="356" r="10" fill="#FF3621"/>
+<text x="22.0" y="360.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">4</text>
+<text x="40.0" y="361.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1B3139" text-anchor="start">Revisión humana</text>
+<rect x="0" y="456" width="760" height="98" rx="8" fill="#F9F7F4"/>
+<circle cx="22" cy="470" r="10" fill="#FF3621"/>
+<text x="22.0" y="474.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">5</text>
+<text x="40.0" y="475.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1B3139" text-anchor="start">Publicación</text>
+<text x="740.0" y="475.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#5A6B71" text-anchor="end">Unity Catalog · esquema gold</text>
+<rect x="0" y="570" width="760" height="98" rx="8" fill="#F3F1ED"/>
+<circle cx="22" cy="584" r="10" fill="#FF3621"/>
+<text x="22.0" y="588.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">6</text>
+<text x="40.0" y="589.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1B3139" text-anchor="start">Semántica y calidad</text>
+<rect x="0" y="684" width="760" height="98" rx="8" fill="#F9F7F4"/>
+<circle cx="22" cy="698" r="10" fill="#FF3621"/>
+<text x="22.0" y="702.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">7</text>
+<text x="40.0" y="703.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1B3139" text-anchor="start">Consumo</text>
+<path d="M230.0,59.0 L273.0,59.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M380.0,90.0 L380.0,106.0 L194.0,106.0 L194.0,140.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M230.0,173.0 L273.0,173.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M485.0,173.0 L528.0,173.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M595.0,204.0 L595.0,220.0 L194.0,220.0 L194.0,254.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M675.0,204.0 L675.0,254.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<text x="681.0" y="233.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" fill="#5A6B71" text-anchor="start">incompletas</text>
+<path d="M230.0,287.0 L273.0,287.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M485.0,287.0 L528.0,287.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M635.0,318.0 L635.0,334.0 L194.0,334.0 L194.0,368.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M230.0,401.0 L273.0,401.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M380.0,432.0 L380.0,448.0 L194.0,448.0 L194.0,482.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M230.0,515.0 L273.0,515.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M180.0,546.0 L180.0,596.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M208.0,546.0 L208.0,562.0 L635.0,562.0 L635.0,596.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M275.0,629.0 L232.0,629.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M485.0,629.0 L528.0,629.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M125.0,660.0 L125.0,676.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M635.0,660.0 L635.0,676.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M20.0,515.0 L8.0,515.0 L8.0,676.0 L659.0,676.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M121.0,676.0 L121.0,710.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M287.0,676.0 L287.0,710.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M473.0,676.0 L473.0,710.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<path d="M659.0,676.0 L659.0,710.0" fill="none" stroke="#1B3139" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#pn)"/>
+<rect x="20" y="28" width="210" height="62" rx="7" fill="#EEEDE9" stroke="#8B9599" stroke-width="1.6"/>
+<text x="125.0" y="50.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Fichas PDF</text>
+<text x="125.0" y="64.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">plantilla v1.2, enviadas</text>
+<text x="125.0" y="79.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">por las áreas de negocio</text>
+<path d="M275,35 a105.0,7 0 0 0 210,0 v48 a105.0,7 0 0 1 -210,0 z" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<ellipse cx="380.0" cy="35" rx="105.0" ry="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="380.0" y="54.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">VOLUMEN UC</text>
+<text x="380.0" y="70.5" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">fichas_indicadores</text>
+<text x="380.0" y="85.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">procesa cada PDF al llegar</text>
+<rect x="20" y="142" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="125.0" y="161.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">BRONZE</text>
+<text x="125.0" y="177.5" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">fichas_parseadas</text>
+<text x="125.0" y="192.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">ai_parse_document</text>
+<rect x="275" y="142" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="380.0" y="154.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">SILVER</text>
+<text x="380.0" y="170.2" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">fichas_estructuradas</text>
+<text x="380.0" y="184.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">ai_extract + ai_classify</text>
+<text x="380.0" y="199.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">6 bloques → 40 campos</text>
+<rect x="530" y="142" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="635.0" y="154.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">SILVER</text>
+<text x="635.0" y="170.2" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">fichas_vigentes</text>
+<text x="635.0" y="184.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">expectativas de</text>
+<text x="635.0" y="199.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">completitud</text>
+<rect x="20" y="256" width="210" height="62" rx="7" fill="#FFF1EE" stroke="#FF3621" stroke-width="1.6"/>
+<text x="125.0" y="278.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">AI Search</text>
+<text x="125.0" y="292.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">fichas parecidas por</text>
+<text x="125.0" y="307.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">significado (embeddings)</text>
+<rect x="275" y="256" width="210" height="62" rx="7" fill="#FFF1EE" stroke="#FF3621" stroke-width="1.6"/>
+<text x="380.0" y="278.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Juez con IA</text>
+<text x="380.0" y="292.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">ai_query compara cada</text>
+<text x="380.0" y="307.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">par y explica la diferencia</text>
+<rect x="530" y="256" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="635.0" y="268.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">GOLD</text>
+<text x="635.0" y="284.2" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">hallazgos_revision</text>
+<text x="635.0" y="298.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">duplicado · conflicto</text>
+<text x="635.0" y="313.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">· ficha incompleta</text>
+<rect x="20" y="370" width="210" height="62" rx="7" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.6"/>
+<text x="125.0" y="392.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">App de revisión</text>
+<text x="125.0" y="406.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">Databricks Apps · Data</text>
+<text x="125.0" y="421.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">Owners y Data Stewards</text>
+<rect x="275" y="370" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="380.0" y="382.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">GOLD</text>
+<text x="380.0" y="398.2" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">decisiones_revision</text>
+<text x="380.0" y="412.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">cada decisión con</text>
+<text x="380.0" y="427.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">usuario y fecha</text>
+<rect x="20" y="484" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="125.0" y="496.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">GOLD</text>
+<text x="125.0" y="512.2" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">catalogo_indicadores</text>
+<text x="125.0" y="526.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">indicadores certificados</text>
+<text x="125.0" y="541.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">con estado y Data Owner</text>
+<rect x="275" y="484" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="380.0" y="496.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">GOLD</text>
+<text x="380.0" y="512.2" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">glosario_negocio</text>
+<text x="380.0" y="526.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">dominios · etiquetas</text>
+<text x="380.0" y="541.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">· homologación</text>
+<rect x="20" y="598" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="125.0" y="620.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Vistas de métricas</text>
+<text x="125.0" y="634.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">mv_citas_telemarketing</text>
+<text x="125.0" y="649.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">mv_cartera_credito</text>
+<path d="M275,605 a105.0,7 0 0 0 210,0 v48 a105.0,7 0 0 1 -210,0 z" fill="#EEEDE9" stroke="#8B9599" stroke-width="1.6"/>
+<ellipse cx="380.0" cy="605" rx="105.0" ry="7" fill="#EEEDE9" stroke="#8B9599" stroke-width="1.6"/>
+<text x="380.0" y="634.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Fuentes de datos</text>
+<text x="380.0" y="648.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">CRM y cartera</text>
+<rect x="530" y="598" width="210" height="62" rx="7" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.6"/>
+<text x="635.0" y="610.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5A6B71" text-anchor="middle">GOLD</text>
+<text x="635.0" y="626.2" font-family="Menlo, DejaVu Sans Mono, monospace" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">reglas_calidad</text>
+<text x="635.0" y="640.8" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">resultados_calidad</text>
+<text x="635.0" y="655.2" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">en cada carga</text>
+<rect x="20" y="712" width="162" height="62" rx="7" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.6"/>
+<text x="101.0" y="734.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Genie</text>
+<text x="101.0" y="748.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">Catálogo de</text>
+<text x="101.0" y="763.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">indicadores</text>
+<rect x="206" y="712" width="162" height="62" rx="7" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.6"/>
+<text x="287.0" y="734.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Genie</text>
+<text x="287.0" y="748.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">Indicadores</text>
+<text x="287.0" y="763.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">de negocio</text>
+<rect x="392" y="712" width="162" height="62" rx="7" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.6"/>
+<text x="473.0" y="734.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Dashboards AI/BI</text>
+<text x="473.0" y="748.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">gobierno y calidad;</text>
+<text x="473.0" y="763.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">operación y costos</text>
+<rect x="578" y="712" width="162" height="62" rx="7" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.6"/>
+<text x="659.0" y="734.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="bold" fill="#1B3139" text-anchor="middle">Alertas SQL</text>
+<text x="659.0" y="748.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">contingencia, metas</text>
+<text x="659.0" y="763.0" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" fill="#3D4F55" text-anchor="middle">y frescura</text>
+<rect x="20" y="800" width="22" height="14" rx="3" fill="#EEEDE9" stroke="#8B9599" stroke-width="1.4"/>
+<text x="48.0" y="811.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">Origen</text>
+<rect x="112.4" y="800" width="22" height="14" rx="3" fill="#FFF1EE" stroke="#FF3621" stroke-width="1.4"/>
+<text x="140.4" y="811.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">Capacidad de IA</text>
+<rect x="262.4" y="800" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#1B3139" stroke-width="1.4"/>
+<text x="290.4" y="811.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">Tabla, volumen o vista en Unity Catalog</text>
+<rect x="566.0" y="800" width="22" height="14" rx="3" fill="#EAF3FB" stroke="#2272B4" stroke-width="1.4"/>
+<text x="594.0" y="811.5" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" fill="#3D4F55" text-anchor="start">App y consumo</text>
+</svg>

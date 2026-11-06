@@ -1,0 +1,174 @@
+# Operación (demo y escenario real): cada vez que un área deposita fichas nuevas en el volumen,
+# se leen, se buscan duplicados y conflictos y quedan en la cola de revisión de la app.
+# Referencia: https://learn.microsoft.com/es-es/azure/databricks/jobs/file-arrival-triggers
+resources:
+  jobs:
+    actualizacion_fichas:
+      name: "Gobierno de indicadores · Procesar fichas nuevas"
+      permissions:
+        - group_name: ${var.grupo_operacion}
+          level: CAN_VIEW
+      trigger:
+        pause_status: PAUSED
+        file_arrival:
+          url: /Volumes/${var.catalogo}/${var.prefijo_esquemas}_landing/fichas_indicadores/recibidas/
+          min_time_between_triggers_seconds: 900
+          wait_after_last_change_seconds: 300
+      email_notifications:
+        on_failure: [ "${var.correo_alertas}" ]
+        on_duration_warning_threshold_exceeded: [ "${var.correo_alertas}" ]
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 3600
+      parameters:
+        - { name: catalogo, default: "${var.catalogo}" }
+        - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+        - { name: modelo_llm, default: "${var.modelo_llm}" }
+        - { name: modelo_embeddings, default: "${var.modelo_embeddings}" }
+        - { name: endpoint_vector_search, default: "${var.endpoint_vector_search}" }
+        - { name: umbral_similitud, default: "${var.umbral_similitud}" }
+        - { name: grupo_revisores, default: "${var.grupo_revisores}" }
+        - { name: grupo_operacion, default: "${var.grupo_operacion}" }
+        - { name: grupo_stewards, default: "${var.grupo_stewards}" }
+        - { name: sobrescribir_genie, default: "${var.sobrescribir_genie}" }
+        - { name: nombre_app, default: "${resources.apps.revision_indicadores.name}" }
+        - { name: warehouse_id, default: "${var.warehouse_id}" }
+      tasks:
+        - task_key: pipeline_incremental
+          pipeline_task: { pipeline_id: "${resources.pipelines.pipeline_fichas.id}" }
+        - task_key: detectar_duplicados_y_conflictos
+          depends_on: [ { task_key: pipeline_incremental } ]
+          notebook_task: { notebook_path: ../src/04_detectar_duplicados_y_conflictos.py }
+        - task_key: otorgar_permisos
+          depends_on: [ { task_key: detectar_duplicados_y_conflictos } ]
+          notebook_task: { notebook_path: ../src/12_otorgar_permisos.py }
+
+    # Publicación: después de cada jornada de revisión, actualiza catálogo, glosario, vistas de métricas y calidad.
+    publicacion_catalogo:
+      name: "Gobierno de indicadores · Publicar catálogo certificado"
+      permissions:
+        - group_name: ${var.grupo_operacion}
+          level: CAN_VIEW
+        - group_name: ${var.grupo_stewards}
+          level: CAN_MANAGE_RUN
+      schedule:
+        quartz_cron_expression: "0 0 20 ? * MON-FRI"
+        timezone_id: America/Mexico_City
+        pause_status: PAUSED
+      email_notifications:
+        on_failure: [ "${var.correo_alertas}" ]
+      parameters:
+        - { name: catalogo, default: "${var.catalogo}" }
+        - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+        - { name: warehouse_id, default: "${var.warehouse_id}" }
+        - { name: modelo_llm, default: "${var.modelo_llm}" }
+        - { name: tag_dominio, default: "${var.tag_dominio}" }
+        - { name: grupo_revisores, default: "${var.grupo_revisores}" }
+        - { name: nombre_app, default: "${resources.apps.revision_indicadores.name}" }
+        - { name: endpoint_vector_search, default: "${var.endpoint_vector_search}" }
+        - { name: modo, default: "${var.modo_vistas_de_metricas}" }
+        - { name: aprobar_reglas_automaticamente, default: "${var.aprobar_reglas_automaticamente}" }
+        - { name: warehouse_id_costos, default: "${var.warehouse_id_costos}" }
+        - { name: grupo_operacion, default: "${var.grupo_operacion}" }
+        - { name: grupo_stewards, default: "${var.grupo_stewards}" }
+        - { name: sobrescribir_genie, default: "${var.sobrescribir_genie}" }
+        - { name: aprobar_indicadores_automaticamente, default: "${var.aprobar_indicadores_automaticamente}" }
+      tasks:
+        - task_key: publicar_catalogo_y_glosario
+          notebook_task: { notebook_path: ../src/06_publicar_catalogo_y_glosario.py }
+        - task_key: generar_vistas_de_metricas
+          depends_on: [ { task_key: publicar_catalogo_y_glosario } ]
+          notebook_task: { notebook_path: ../src/07_generar_vistas_de_metricas.py }
+        - task_key: reglas_de_calidad
+          depends_on: [ { task_key: publicar_catalogo_y_glosario } ]
+          notebook_task: { notebook_path: ../src/08_reglas_de_calidad.py }
+        - task_key: crear_agentes_genie
+          depends_on: [ { task_key: generar_vistas_de_metricas }, { task_key: reglas_de_calidad } ]
+          notebook_task: { notebook_path: ../src/09_crear_agentes_genie.py }
+        - task_key: costos_y_monitoreo
+          depends_on: [ { task_key: crear_agentes_genie } ]
+          notebook_task: { notebook_path: ../src/10_costos_y_monitoreo.py }
+        - task_key: otorgar_permisos
+          depends_on: [ { task_key: costos_y_monitoreo } ]
+          notebook_task: { notebook_path: ../src/12_otorgar_permisos.py }
+
+    # Configuración inicial (una sola vez por entorno): esquemas, volumen y etiquetas.
+    configuracion_inicial:
+      name: "Gobierno de indicadores · Configuración inicial"
+      permissions:
+        - group_name: ${var.grupo_operacion}
+          level: CAN_VIEW
+      email_notifications:
+        on_failure: [ "${var.correo_alertas}" ]
+      parameters:
+        - { name: catalogo, default: "${var.catalogo}" }
+        - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+        - { name: grupo_revisores, default: "${var.grupo_revisores}" }
+        - { name: grupo_operacion, default: "${var.grupo_operacion}" }
+        - { name: grupo_stewards, default: "${var.grupo_stewards}" }
+        - { name: sobrescribir_genie, default: "${var.sobrescribir_genie}" }
+        - { name: nombre_app, default: "${resources.apps.revision_indicadores.name}" }
+        - { name: warehouse_id, default: "${var.warehouse_id}" }
+      tasks:
+        - task_key: preparar_entorno
+          notebook_task: { notebook_path: ../src/00_preparar_entorno.py }
+        - task_key: otorgar_permisos
+          depends_on: [ { task_key: preparar_entorno } ]
+          notebook_task: { notebook_path: ../src/12_otorgar_permisos.py }
+
+    # Calidad en cada carga: cuando se actualizan las tablas de origen, se evalúan las reglas del Bloque 5.
+    # Referencia: https://learn.microsoft.com/es-es/azure/databricks/jobs/trigger-table-update
+    calidad_por_carga:
+      name: "Gobierno de indicadores · Calidad en cada carga de las fuentes"
+      permissions:
+        - group_name: ${var.grupo_operacion}
+          level: CAN_VIEW
+      trigger:
+        pause_status: PAUSED
+        table_update:
+          table_names: ${var.tablas_origen_calidad}
+          min_time_between_triggers_seconds: 900
+      email_notifications:
+        on_failure: [ "${var.correo_alertas}" ]
+      parameters:
+        - { name: catalogo, default: "${var.catalogo}" }
+        - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+        - { name: modelo_llm, default: "${var.modelo_llm}" }
+        - { name: aprobar_reglas_automaticamente, default: "${var.aprobar_reglas_automaticamente}" }
+      tasks:
+        - task_key: reglas_de_calidad
+          notebook_task: { notebook_path: ../src/08_reglas_de_calidad.py }
+
+    # Publica las vistas de métricas aprobadas por el Data Steward (sin llamar a la IA) y actualiza Genie.
+    publicar_vistas_aprobadas:
+      name: "Gobierno de indicadores · Publicar vistas de métricas aprobadas"
+      permissions:
+        - group_name: ${var.grupo_operacion}
+          level: CAN_VIEW
+        - group_name: ${var.grupo_stewards}
+          level: CAN_MANAGE_RUN
+      email_notifications:
+        on_failure: [ "${var.correo_alertas}" ]
+      parameters:
+        - { name: catalogo, default: "${var.catalogo}" }
+        - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+        - { name: warehouse_id, default: "${var.warehouse_id}" }
+        - { name: tag_dominio, default: "${var.tag_dominio}" }
+        - { name: grupo_revisores, default: "${var.grupo_revisores}" }
+        - { name: grupo_operacion, default: "${var.grupo_operacion}" }
+        - { name: grupo_stewards, default: "${var.grupo_stewards}" }
+        - { name: sobrescribir_genie, default: "${var.sobrescribir_genie}" }
+        - { name: nombre_app, default: "${resources.apps.revision_indicadores.name}" }
+      tasks:
+        - task_key: publicar_vistas
+          notebook_task:
+            notebook_path: ../src/07_generar_vistas_de_metricas.py
+            base_parameters: { modo: publicar_aprobadas }
+        - task_key: crear_agentes_genie
+          depends_on: [ { task_key: publicar_vistas } ]
+          notebook_task: { notebook_path: ../src/09_crear_agentes_genie.py }
+        - task_key: otorgar_permisos
+          depends_on: [ { task_key: crear_agentes_genie } ]
+          notebook_task: { notebook_path: ../src/12_otorgar_permisos.py }

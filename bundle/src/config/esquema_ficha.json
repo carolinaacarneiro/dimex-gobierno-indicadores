@@ -1,0 +1,200 @@
+{
+  "identidad": {
+    "type": "object",
+    "description": "Bloque 1: Identidad funcional",
+    "properties": {
+      "id_indicador": {
+        "type": "string",
+        "description": "ID del Indicador, por ejemplo IND-001"
+      },
+      "nombre": {
+        "type": "string",
+        "description": "Nombre del Indicador, sin punto final"
+      },
+      "objetivo_estrategico": {
+        "type": "string"
+      },
+      "definicion_funcional": {
+        "type": "string"
+      },
+      "meta_umbral": {
+        "type": "string",
+        "description": "Umbrales / Meta, tal como aparece"
+      },
+      "pregunta_negocio": {
+        "type": "string"
+      },
+      "criterios_exclusion": {
+        "type": "string",
+        "description": "Criterios de Exclusión de Negocio; 'No aplica' si no hay"
+      },
+      "audiencia": {
+        "type": "string"
+      },
+      "unidad_medida": {
+        "type": "string"
+      }
+    }
+  },
+  "clasificacion": {
+    "type": "object",
+    "description": "Bloque 2: Clasificación y riesgo",
+    "properties": {
+      "tipo_indicador": {
+        "type": "enum",
+        "labels": [
+          "Estratégico",
+          "Operativo",
+          "Regulatorio",
+          "Informativo"
+        ],
+        "description": "Opción marcada en Tipo de Indicador"
+      },
+      "riesgos_asociados": {
+        "type": "string"
+      },
+      "dependencias": {
+        "type": "string"
+      }
+    }
+  },
+  "tecnico": {
+    "type": "object",
+    "description": "Bloque 3: Músculo técnico y origen",
+    "properties": {
+      "variable_a": {
+        "type": "string"
+      },
+      "variable_b": {
+        "type": "string"
+      },
+      "frecuencia_calculo": {
+        "type": "string"
+      },
+      "frecuencia_publicacion": {
+        "type": "string"
+      },
+      "horario_operativo": {
+        "type": "string"
+      },
+      "formula": {
+        "type": "string",
+        "description": "Fórmula / Lógica"
+      },
+      "sistema_origen": {
+        "type": "string",
+        "description": "Sistema del origen de datos; vacío si dice 'Por definir'"
+      },
+      "base_datos_origen": {
+        "type": "string"
+      },
+      "esquema_origen": {
+        "type": "string"
+      },
+      "tabla_origen": {
+        "type": "string"
+      },
+      "campos_origen": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Campos del origen de datos"
+      }
+    }
+  },
+  "operativo": {
+    "type": "object",
+    "description": "Bloque 4: Modelo operativo",
+    "properties": {
+      "area_responsable": {
+        "type": "string"
+      },
+      "dominio_datos": {
+        "type": "string"
+      },
+      "data_owner": {
+        "type": "string",
+        "description": "Puesto del Data Owner; vacío si no está informado"
+      },
+      "data_steward": {
+        "type": "string",
+        "description": "Puesto del Data Steward; vacío si no está informado"
+      },
+      "frecuencia_revision": {
+        "type": "string"
+      },
+      "fecha_creacion": {
+        "type": "string"
+      },
+      "ultima_actualizacion": {
+        "type": "string"
+      },
+      "historial_cambios": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "calidad": {
+    "type": "object",
+    "description": "Bloque 5: Reglas de calidad y glosario",
+    "properties": {
+      "criterio_completitud": {
+        "type": "string"
+      },
+      "criterio_validez": {
+        "type": "string"
+      },
+      "regla_unicidad": {
+        "type": "string"
+      },
+      "regla_oportunidad": {
+        "type": "string"
+      },
+      "protocolo_contingencia": {
+        "type": "string"
+      },
+      "glosario": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "termino": {
+              "type": "string"
+            },
+            "definicion": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "homologacion_vocabulario": {
+        "type": "string"
+      }
+    }
+  },
+  "dimensiones": {
+    "type": "object",
+    "description": "Bloque 6: Dimensiones de análisis",
+    "properties": {
+      "autorizadas": {
+        "type": "array",
+        "description": "Dimensiones autorizadas con su campo técnico de filtro/agrupación, en el mismo orden",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nombre": {
+              "type": "string"
+            },
+            "campo_tecnico": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

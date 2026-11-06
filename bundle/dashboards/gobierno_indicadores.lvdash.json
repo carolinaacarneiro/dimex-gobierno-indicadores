@@ -1,0 +1,921 @@
+{
+ "datasets": [
+  {
+   "name": "ds_kpis",
+   "displayName": "Resumen del catálogo",
+   "queryLines": [
+    "SELECT count(*) AS fichas,\n",
+    "       count_if(estado_certificacion = 'CERTIFICADO') AS certificados,\n",
+    "       count_if(estado_certificacion = 'RETIRADO') AS unificadas,\n",
+    "       count_if(estado_certificacion IN ('EN_REVISION', 'DEVUELTO_AL_AREA')) AS por_resolver,\n",
+    "       (SELECT count(*) FROM hallazgos_revision WHERE estado = 'PENDIENTE') AS hallazgos_pendientes\n",
+    "FROM catalogo_indicadores\n"
+   ]
+  },
+  {
+   "name": "ds_dominio",
+   "displayName": "Fichas por dominio y estado",
+   "queryLines": [
+    "SELECT dominio, estado_certificacion, count(*) AS fichas FROM catalogo_indicadores GROUP BY ALL\n"
+   ]
+  },
+  {
+   "name": "ds_catalogo",
+   "displayName": "Catálogo de indicadores",
+   "queryLines": [
+    "SELECT id_indicador, nombre, dominio, estado_certificacion, tipo_indicador, data_owner, meta_umbral,\n",
+    "       array_join(sinonimos, ', ') AS sinonimos, vista_de_metricas, motivo_estado\n",
+    "FROM catalogo_indicadores ORDER BY dominio, id_indicador\n"
+   ]
+  },
+  {
+   "name": "ds_hallazgos",
+   "displayName": "Hallazgos por tipo y estado",
+   "queryLines": [
+    "SELECT tipo_hallazgo, estado, count(*) AS hallazgos FROM hallazgos_revision GROUP BY ALL\n"
+   ]
+  },
+  {
+   "name": "ds_pendientes",
+   "displayName": "Hallazgos pendientes",
+   "queryLines": [
+    "SELECT prioridad, tipo_hallazgo, id_ficha, nombre, area, id_ficha_relacionada, nombre_relacionado, justificacion\n",
+    "FROM hallazgos_revision WHERE estado = 'PENDIENTE'\n",
+    "ORDER BY CASE prioridad WHEN 'Alta' THEN 1 WHEN 'Media' THEN 2 ELSE 3 END\n"
+   ]
+  },
+  {
+   "name": "ds_calidad",
+   "displayName": "Última evaluación de calidad",
+   "queryLines": [
+    "SELECT r.id_indicador, c.nombre, r.tipo, r.descripcion, round(r.valor_obtenido_pct, 2) AS valor_pct, r.umbral_pct,\n",
+    "       CASE WHEN r.cumple THEN 'Cumple' ELSE 'No cumple' END AS resultado, r.es_contingencia, r.fecha_evaluacion\n",
+    "FROM resultados_calidad r JOIN catalogo_indicadores c USING (id_indicador)\n",
+    "QUALIFY r.fecha_evaluacion = max(r.fecha_evaluacion) OVER (PARTITION BY r.id_indicador)\n",
+    "ORDER BY r.id_indicador, r.tipo\n"
+   ]
+  },
+  {
+   "name": "ds_publicacion",
+   "displayName": "Estado de publicación",
+   "queryLines": [
+    "SELECT p.id_indicador, c.nombre, CASE WHEN p.publicar THEN 'Publicar' ELSE 'En pausa' END AS estado, p.motivo_pausa, p.fecha_evaluacion\n",
+    "FROM estado_publicacion_indicadores p JOIN catalogo_indicadores c USING (id_indicador)\n"
+   ]
+  },
+  {
+   "name": "ds_serie",
+   "displayName": "Serie mensual de indicadores",
+   "queryLines": [
+    "SELECT id_indicador, concat(id_indicador, ' · ', nombre) AS indicador, mes, valor, meta_umbral FROM serie_mensual_indicadores WHERE mes < date_trunc('MONTH', current_date())\n"
+   ]
+  }
+ ],
+ "pages": [
+  {
+   "name": "p_catalogo",
+   "displayName": "Catálogo",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layout": [
+    {
+     "widget": {
+      "name": "t1",
+      "multilineTextboxSpec": {
+       "lines": [
+        "# Gobierno de indicadores de negocio",
+        "De las fichas de documentación al catálogo certificado en Unity Catalog. Sólo los indicadores **CERTIFICADOS** deben usarse en reportes."
+       ]
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "k1",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_kpis",
+         "fields": [
+          {
+           "name": "fichas",
+           "expression": "`fichas`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "fichas",
+         "displayName": "Fichas recibidas"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Fichas recibidas"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 2,
+      "width": 1,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "k2",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_kpis",
+         "fields": [
+          {
+           "name": "certificados",
+           "expression": "`certificados`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "certificados",
+         "displayName": "Indicadores certificados"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Indicadores certificados"
+       }
+      }
+     },
+     "position": {
+      "x": 1,
+      "y": 2,
+      "width": 1,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "k3",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_kpis",
+         "fields": [
+          {
+           "name": "unificadas",
+           "expression": "`unificadas`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "unificadas",
+         "displayName": "Fichas unificadas (duplicados)"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Fichas unificadas (duplicados)"
+       }
+      }
+     },
+     "position": {
+      "x": 2,
+      "y": 2,
+      "width": 1,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "k4",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_kpis",
+         "fields": [
+          {
+           "name": "por_resolver",
+           "expression": "`por_resolver`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "por_resolver",
+         "displayName": "Fichas por resolver"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Fichas por resolver"
+       }
+      }
+     },
+     "position": {
+      "x": 3,
+      "y": 2,
+      "width": 1,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "k5",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_kpis",
+         "fields": [
+          {
+           "name": "hallazgos_pendientes",
+           "expression": "`hallazgos_pendientes`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "hallazgos_pendientes",
+         "displayName": "Hallazgos pendientes"
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Hallazgos pendientes"
+       }
+      }
+     },
+     "position": {
+      "x": 4,
+      "y": 2,
+      "width": 2,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "b1",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_dominio",
+         "fields": [
+          {
+           "name": "dominio",
+           "expression": "`dominio`"
+          },
+          {
+           "name": "fichas",
+           "expression": "SUM(`fichas`)"
+          },
+          {
+           "name": "estado_certificacion",
+           "expression": "`estado_certificacion`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "fichas",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "y": {
+         "fieldName": "dominio",
+         "scale": {
+          "type": "categorical",
+          "sort": {
+           "by": "x-reversed"
+          }
+         }
+        },
+        "color": {
+         "fieldName": "estado_certificacion",
+         "scale": {
+          "type": "categorical"
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Fichas por dominio y estado"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 4,
+      "width": 6,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "tb1",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_catalogo",
+         "fields": [
+          {
+           "name": "id_indicador",
+           "expression": "`id_indicador`"
+          },
+          {
+           "name": "nombre",
+           "expression": "`nombre`"
+          },
+          {
+           "name": "dominio",
+           "expression": "`dominio`"
+          },
+          {
+           "name": "estado_certificacion",
+           "expression": "`estado_certificacion`"
+          },
+          {
+           "name": "tipo_indicador",
+           "expression": "`tipo_indicador`"
+          },
+          {
+           "name": "data_owner",
+           "expression": "`data_owner`"
+          },
+          {
+           "name": "meta_umbral",
+           "expression": "`meta_umbral`"
+          },
+          {
+           "name": "sinonimos",
+           "expression": "`sinonimos`"
+          },
+          {
+           "name": "vista_de_metricas",
+           "expression": "`vista_de_metricas`"
+          },
+          {
+           "name": "motivo_estado",
+           "expression": "`motivo_estado`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 1,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "id_indicador",
+          "displayName": "ID",
+          "title": "ID"
+         },
+         {
+          "fieldName": "nombre",
+          "displayName": "Indicador",
+          "title": "Indicador"
+         },
+         {
+          "fieldName": "dominio",
+          "displayName": "Dominio",
+          "title": "Dominio"
+         },
+         {
+          "fieldName": "estado_certificacion",
+          "displayName": "Estado",
+          "title": "Estado"
+         },
+         {
+          "fieldName": "tipo_indicador",
+          "displayName": "Tipo",
+          "title": "Tipo"
+         },
+         {
+          "fieldName": "data_owner",
+          "displayName": "Data Owner",
+          "title": "Data Owner"
+         },
+         {
+          "fieldName": "meta_umbral",
+          "displayName": "Meta",
+          "title": "Meta"
+         },
+         {
+          "fieldName": "sinonimos",
+          "displayName": "Sinónimos",
+          "title": "Sinónimos"
+         },
+         {
+          "fieldName": "vista_de_metricas",
+          "displayName": "Vista de métricas",
+          "title": "Vista de métricas"
+         },
+         {
+          "fieldName": "motivo_estado",
+          "displayName": "Motivo",
+          "title": "Motivo"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Catálogo de indicadores"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 10,
+      "width": 6,
+      "height": 9
+     }
+    }
+   ]
+  },
+  {
+   "name": "p_revision",
+   "displayName": "Revisión",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layout": [
+    {
+     "widget": {
+      "name": "b2",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_hallazgos",
+         "fields": [
+          {
+           "name": "tipo_hallazgo",
+           "expression": "`tipo_hallazgo`"
+          },
+          {
+           "name": "hallazgos",
+           "expression": "SUM(`hallazgos`)"
+          },
+          {
+           "name": "estado",
+           "expression": "`estado`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "hallazgos",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "y": {
+         "fieldName": "tipo_hallazgo",
+         "scale": {
+          "type": "categorical",
+          "sort": {
+           "by": "x-reversed"
+          }
+         }
+        },
+        "color": {
+         "fieldName": "estado",
+         "scale": {
+          "type": "categorical"
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Hallazgos por tipo y estado"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 5
+     }
+    },
+    {
+     "widget": {
+      "name": "tb2",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_pendientes",
+         "fields": [
+          {
+           "name": "prioridad",
+           "expression": "`prioridad`"
+          },
+          {
+           "name": "tipo_hallazgo",
+           "expression": "`tipo_hallazgo`"
+          },
+          {
+           "name": "id_ficha",
+           "expression": "`id_ficha`"
+          },
+          {
+           "name": "nombre",
+           "expression": "`nombre`"
+          },
+          {
+           "name": "area",
+           "expression": "`area`"
+          },
+          {
+           "name": "id_ficha_relacionada",
+           "expression": "`id_ficha_relacionada`"
+          },
+          {
+           "name": "nombre_relacionado",
+           "expression": "`nombre_relacionado`"
+          },
+          {
+           "name": "justificacion",
+           "expression": "`justificacion`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 1,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "prioridad",
+          "displayName": "Prioridad",
+          "title": "Prioridad"
+         },
+         {
+          "fieldName": "tipo_hallazgo",
+          "displayName": "Tipo",
+          "title": "Tipo"
+         },
+         {
+          "fieldName": "id_ficha",
+          "displayName": "Ficha",
+          "title": "Ficha"
+         },
+         {
+          "fieldName": "nombre",
+          "displayName": "Indicador",
+          "title": "Indicador"
+         },
+         {
+          "fieldName": "area",
+          "displayName": "Área",
+          "title": "Área"
+         },
+         {
+          "fieldName": "id_ficha_relacionada",
+          "displayName": "Ficha relacionada",
+          "title": "Ficha relacionada"
+         },
+         {
+          "fieldName": "nombre_relacionado",
+          "displayName": "Indicador relacionado",
+          "title": "Indicador relacionado"
+         },
+         {
+          "fieldName": "justificacion",
+          "displayName": "Justificación",
+          "title": "Justificación"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Hallazgos pendientes de revisión"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 5,
+      "width": 6,
+      "height": 8
+     }
+    }
+   ]
+  },
+  {
+   "name": "p_calidad",
+   "displayName": "Indicadores y calidad",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layout": [
+    {
+     "widget": {
+      "name": "l1",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_serie",
+         "fields": [
+          {
+           "name": "mes",
+           "expression": "`mes`"
+          },
+          {
+           "name": "valor",
+           "expression": "AVG(`valor`)"
+          },
+          {
+           "name": "indicador",
+           "expression": "`indicador`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "line",
+       "encodings": {
+        "x": {
+         "fieldName": "mes",
+         "scale": {
+          "type": "temporal"
+         }
+        },
+        "y": {
+         "fieldName": "valor",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "color": {
+         "fieldName": "indicador",
+         "scale": {
+          "type": "categorical"
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Indicadores certificados por mes (calculados con las vistas de métricas)"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "tb4",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_publicacion",
+         "fields": [
+          {
+           "name": "id_indicador",
+           "expression": "`id_indicador`"
+          },
+          {
+           "name": "nombre",
+           "expression": "`nombre`"
+          },
+          {
+           "name": "estado",
+           "expression": "`estado`"
+          },
+          {
+           "name": "motivo_pausa",
+           "expression": "`motivo_pausa`"
+          },
+          {
+           "name": "fecha_evaluacion",
+           "expression": "`fecha_evaluacion`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 1,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "id_indicador",
+          "displayName": "ID",
+          "title": "ID"
+         },
+         {
+          "fieldName": "nombre",
+          "displayName": "Indicador",
+          "title": "Indicador"
+         },
+         {
+          "fieldName": "estado",
+          "displayName": "Publicación",
+          "title": "Publicación"
+         },
+         {
+          "fieldName": "motivo_pausa",
+          "displayName": "Motivo de pausa",
+          "title": "Motivo de pausa"
+         },
+         {
+          "fieldName": "fecha_evaluacion",
+          "displayName": "Evaluado",
+          "title": "Evaluado"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Protocolo de contingencia: estado de publicación"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 6,
+      "width": 6,
+      "height": 4
+     }
+    },
+    {
+     "widget": {
+      "name": "tb5",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_calidad",
+         "fields": [
+          {
+           "name": "id_indicador",
+           "expression": "`id_indicador`"
+          },
+          {
+           "name": "nombre",
+           "expression": "`nombre`"
+          },
+          {
+           "name": "tipo",
+           "expression": "`tipo`"
+          },
+          {
+           "name": "descripcion",
+           "expression": "`descripcion`"
+          },
+          {
+           "name": "valor_pct",
+           "expression": "`valor_pct`"
+          },
+          {
+           "name": "umbral_pct",
+           "expression": "`umbral_pct`"
+          },
+          {
+           "name": "resultado",
+           "expression": "`resultado`"
+          },
+          {
+           "name": "es_contingencia",
+           "expression": "`es_contingencia`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 1,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "id_indicador",
+          "displayName": "ID",
+          "title": "ID"
+         },
+         {
+          "fieldName": "nombre",
+          "displayName": "Indicador",
+          "title": "Indicador"
+         },
+         {
+          "fieldName": "tipo",
+          "displayName": "Regla",
+          "title": "Regla"
+         },
+         {
+          "fieldName": "descripcion",
+          "displayName": "Descripción",
+          "title": "Descripción"
+         },
+         {
+          "fieldName": "valor_pct",
+          "displayName": "Valor (%)",
+          "title": "Valor (%)"
+         },
+         {
+          "fieldName": "umbral_pct",
+          "displayName": "Mínimo (%)",
+          "title": "Mínimo (%)"
+         },
+         {
+          "fieldName": "resultado",
+          "displayName": "Resultado",
+          "title": "Resultado"
+         },
+         {
+          "fieldName": "es_contingencia",
+          "displayName": "Contingencia",
+          "title": "Contingencia"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Última evaluación de las reglas de calidad (Bloque 5)"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 10,
+      "width": 6,
+      "height": 8
+     }
+    }
+   ]
+  }
+ ]
+}

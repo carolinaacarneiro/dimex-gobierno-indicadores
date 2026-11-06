@@ -1,0 +1,24 @@
+{
+  "_descripcion": "Dónde está en Unity Catalog cada tabla de origen que citan las fichas (Bloque 3). La clave es BASE.ESQUEMA.TABLA tal como aparece en la ficha; 'tabla' es el nombre dentro del esquema <prefijo>_fuentes (o un nombre completo catalogo.esquema.tabla). 'joins' agrega tablas de catálogo para dimensiones. 'columna_carga' identifica la última carga para evaluar las reglas de calidad. 'dominio' (opcional, en la tabla o en cada join) es el valor de la etiqueta de dominio; si falta, se usa el dominio de los indicadores certificados que usan la tabla.",
+  "DB_CRM_PROD.dbo.Tbl_Citas_Master": {
+    "tabla": "tbl_citas_master",
+    "vista": "mv_citas_telemarketing",
+    "columna_fecha": "Fec_Cita",
+    "joins": [
+      {
+        "nombre": "sucursal",
+        "tabla": "cat_sucursales",
+        "on": "source.Id_Sucursal_Destino = sucursal.Id_Sucursal",
+        "dominio": "red_de_sucursales"
+      }
+    ],
+    "columna_carga": "_fecha_carga"
+  },
+  "DB_CORE_CREDITO.dbo.Tbl_Cartera_Mensual": {
+    "tabla": "tbl_cartera_mensual",
+    "vista": "mv_cartera_credito",
+    "columna_fecha": "Fec_Corte",
+    "joins": [],
+    "columna_carga": "Fec_Corte"
+  }
+}

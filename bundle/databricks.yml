@@ -1,0 +1,274 @@
+# Bundle de la solución "Gobierno de indicadores de negocio".
+# De las fichas de documentación (PDF) a un catálogo certificado de indicadores en Unity Catalog:
+# lectura con IA, detección de duplicados y conflictos, revisión humana, glosario, dominios,
+# vistas de métricas, reglas de calidad y agentes de Genie.
+#
+# Despliegue:    databricks bundle deploy -t <destino>
+# Ejecución:     databricks bundle run -t <destino> demo_completa
+# Documentación: https://learn.microsoft.com/es-es/azure/databricks/dev-tools/bundles/
+
+bundle:
+  name: gobierno_indicadores
+
+include:
+  - resources/*.yml
+
+sync:
+  exclude:
+    - "**/__pycache__/**"
+
+variables:
+  catalogo:
+    description: Catálogo de Unity Catalog donde se crean los esquemas de la solución.
+    default: gobierno_datos
+  prefijo_esquemas:
+    description: Prefijo de los esquemas (se crean <prefijo>_landing, _fuentes, _bronze, _silver y _gold).
+    default: indicadores
+  warehouse_id:
+    description: ID del SQL warehouse (serverless) para la app de revisión, las alertas, el dashboard y los agentes de Genie.
+  modelo_llm:
+    description: Endpoint de Model Serving usado por ai_query (juez de duplicados, generación de vistas de métricas y reglas de calidad).
+    default: databricks-claude-sonnet-4-6
+  modelo_embeddings:
+    description: Endpoint de embeddings para la búsqueda semántica de fichas similares (multilingüe, admite español).
+    default: databricks-qwen3-embedding-0-6b
+  endpoint_vector_search:
+    description: Nombre del endpoint de AI Search, antes Vector Search (se crea si no existe).
+    default: indicadores-vs
+  umbral_similitud:
+    description: Puntaje mínimo de similitud (0 a 1) para que dos fichas pasen al juez de duplicados.
+    default: "0.60"
+  tag_dominio:
+    description: Clave de la etiqueta que identifica el dominio de datos en Unity Catalog.
+    default: dominio_datos
+  grupo_revisores:
+    description: Grupo de la cuenta (no local del workspace) de consumidores; lee los objetos publicados, el dashboard principal y Genie.
+    default: revisores_indicadores
+  grupo_aprobadores:
+    description: Grupo de la cuenta (Data Owners y Data Stewards) que usa la app de revisión para decidir y aprobar. Distinto del grupo de consumidores.
+    default: aprobadores_indicadores
+  grupo_stewards:
+    description: Grupo de la cuenta de Data Stewards que aprueba vistas de métricas y reglas de calidad (MODIFY sobre esas tablas).
+    default: stewards_indicadores
+  estado_alertas:
+    description: "PAUSED (por defecto) o UNPAUSED. Activen las alertas después de la primera publicación, cuando existen las tablas gold."
+    default: PAUSED
+  grupo_operacion:
+    description: Grupo que ve costos, auditoría de decisiones y avisos de gobierno (dashboard de operación).
+    default: operacion_datos
+  aprobar_indicadores_automaticamente:
+    description: "si = los indicadores sin hallazgos se certifican sin aprobación (solo demo); no = el Data Owner los aprueba en la app."
+    default: "no"
+  id_indicador_alerta_kpi:
+    description: ID del indicador que vigila la alerta de meta (en la demo, IND-001 · Tasa de Conversión de Cita Efectiva).
+    default: IND-001
+  correo_alertas:
+    description: Correo de un usuario del workspace que recibe las notificaciones de fallas de los jobs y de las alertas SQL (para listas de distribución, use un destino de notificación; ver guía 04).
+    default: gobierno.datos@empresa.com
+  tablas_origen_calidad:
+    description: Tablas de origen (nombres completos) cuya actualización dispara la evaluación de calidad (job calidad_por_carga).
+    type: complex
+    default:
+      - ${var.catalogo}.${var.prefijo_esquemas}_fuentes.tbl_citas_master
+      - ${var.catalogo}.${var.prefijo_esquemas}_fuentes.tbl_cartera_mensual
+  sobrescribir_genie:
+    description: "no (por defecto) = los agentes de Genie se crean una vez y se conservan los ajustes hechos en la interfaz; si = se reescriben en cada publicación (demo)."
+    default: "no"
+  modo_vistas_de_metricas:
+    description: "proponer = la IA propone y el Data Steward aprueba antes de publicar (producción); generar = propone y publica en un paso (solo demo)."
+    default: proponer
+  aprobar_reglas_automaticamente:
+    description: "si = las reglas de calidad extraídas se aprueban solas (solo demo); no = el Data Steward las aprueba en gold.reglas_calidad."
+    default: "no"
+  tabla_frescura:
+    description: Tabla de origen (nombre completo) que vigila la alerta de frescura.
+    default: ${var.catalogo}.${var.prefijo_esquemas}_fuentes.tbl_citas_master
+  columna_frescura:
+    description: Columna de fecha y hora de carga de tabla_frescura.
+    default: _fecha_carga
+  warehouse_id_costos:
+    description: ID del SQL warehouse si es exclusivo de la solución (se suma a la vista de costos); vacío si es compartido.
+    default: ""
+  horas_maximas_sin_carga:
+    description: Horas sin una carga nueva en las tablas de origen a partir de las cuales se alerta (frescura).
+    default: "72"
+  meta_indicador_alerta_kpi:
+    description: Meta del indicador de la alerta de KPI (en la demo, 85 para IND-001); la alerta se dispara si el último mes queda por debajo.
+    default: "85"
+  dias_maximos_revision:
+    description: Días máximos que un hallazgo de prioridad alta puede quedar sin resolver antes de alertar.
+    default: "5"
+  umbral_costo_diario_usd:
+    description: Costo diario (USD a precio de lista) de la solución a partir del cual se alerta.
+    default: "50"
+
+targets:
+  # Entorno de la demostración (datos sintéticos)
+  demo:
+    mode: development
+    default: true
+    presets:
+      tags:
+        proyecto: gobierno_indicadores
+        ambiente: demo
+        area_negocio: gobierno_de_datos
+        responsable: equipo_datos
+    workspace:
+      host: https://<su-workspace-de-pruebas>.azuredatabricks.net
+    variables:
+      catalogo: <mi_catalogo>
+      warehouse_id: <id_de_su_sql_warehouse>
+      grupo_revisores: <grupo_de_revisores>
+      modo_vistas_de_metricas: generar
+      grupo_operacion: <grupo_de_operacion>
+      grupo_aprobadores: <grupo_de_aprobadores>
+      grupo_stewards: <grupo_de_stewards>
+      sobrescribir_genie: "si"
+      aprobar_indicadores_automaticamente: "si"
+      aprobar_reglas_automaticamente: "si"
+      correo_alertas: <correo_de_alertas>
+    resources:
+      jobs:
+        # Demo completa de punta a punta, desde cero.
+        demo_completa:
+          name: "Gobierno de indicadores · Demo completa (desde cero)"
+          email_notifications:
+            on_failure: [ "${var.correo_alertas}" ]
+          parameters:
+            - { name: catalogo, default: "${var.catalogo}" }
+            - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+            - { name: warehouse_id, default: "${var.warehouse_id}" }
+            - { name: modelo_llm, default: "${var.modelo_llm}" }
+            - { name: modelo_embeddings, default: "${var.modelo_embeddings}" }
+            - { name: endpoint_vector_search, default: "${var.endpoint_vector_search}" }
+            - { name: umbral_similitud, default: "${var.umbral_similitud}" }
+            - { name: tag_dominio, default: "${var.tag_dominio}" }
+            - { name: grupo_revisores, default: "${var.grupo_revisores}" }
+            - { name: nombre_app, default: "${resources.apps.revision_indicadores.name}" }
+            - { name: modo, default: "${var.modo_vistas_de_metricas}" }
+            - { name: aprobar_reglas_automaticamente, default: "${var.aprobar_reglas_automaticamente}" }
+            - { name: warehouse_id_costos, default: "${var.warehouse_id_costos}" }
+            - { name: grupo_operacion, default: "${var.grupo_operacion}" }
+            - { name: grupo_stewards, default: "${var.grupo_stewards}" }
+            - { name: sobrescribir_genie, default: "${var.sobrescribir_genie}" }
+            - { name: aprobar_indicadores_automaticamente, default: "${var.aprobar_indicadores_automaticamente}" }
+          tasks:
+            - task_key: preparar_entorno
+              notebook_task: { notebook_path: src/00_preparar_entorno.py }
+            - task_key: generar_fichas_sinteticas
+              depends_on: [ { task_key: preparar_entorno } ]
+              notebook_task:
+                notebook_path: src/01_generar_fichas_sinteticas.py
+                base_parameters: { reemplazar: "si" }
+            - task_key: generar_datos_fuentes
+              depends_on: [ { task_key: preparar_entorno } ]
+              notebook_task: { notebook_path: src/02_generar_datos_fuentes.py }
+            - task_key: pipeline_fichas
+              depends_on: [ { task_key: generar_fichas_sinteticas } ]
+              pipeline_task:
+                pipeline_id: ${resources.pipelines.pipeline_fichas.id}
+                full_refresh: true
+            - task_key: detectar_duplicados_y_conflictos
+              depends_on: [ { task_key: pipeline_fichas } ]
+              notebook_task:
+                notebook_path: src/04_detectar_duplicados_y_conflictos.py
+                base_parameters: { reiniciar_revision: "si" }
+            - task_key: simular_revision
+              depends_on: [ { task_key: detectar_duplicados_y_conflictos } ]
+              notebook_task: { notebook_path: src/05_simular_revision.py }
+            - task_key: publicar_catalogo_y_glosario
+              depends_on: [ { task_key: simular_revision }, { task_key: generar_datos_fuentes } ]
+              notebook_task: { notebook_path: src/06_publicar_catalogo_y_glosario.py }
+            - task_key: generar_vistas_de_metricas
+              depends_on: [ { task_key: publicar_catalogo_y_glosario } ]
+              notebook_task: { notebook_path: src/07_generar_vistas_de_metricas.py }
+            - task_key: reglas_de_calidad
+              depends_on: [ { task_key: publicar_catalogo_y_glosario } ]
+              notebook_task: { notebook_path: src/08_reglas_de_calidad.py }
+            - task_key: crear_agentes_genie
+              depends_on: [ { task_key: generar_vistas_de_metricas }, { task_key: reglas_de_calidad } ]
+              notebook_task: { notebook_path: src/09_crear_agentes_genie.py }
+            - task_key: costos_y_monitoreo
+              depends_on: [ { task_key: crear_agentes_genie } ]
+              notebook_task: { notebook_path: src/10_costos_y_monitoreo.py }
+            - task_key: otorgar_permisos
+              depends_on: [ { task_key: costos_y_monitoreo } ]
+              notebook_task: { notebook_path: src/12_otorgar_permisos.py }
+            - task_key: validaciones
+              depends_on: [ { task_key: otorgar_permisos } ]
+              notebook_task: { notebook_path: src/11_validaciones.py }
+
+        # Demostración en vivo: un área envía una ficha nueva que repite un indicador existente.
+        demo_llega_ficha_nueva:
+          name: "Gobierno de indicadores · Demo: llega una ficha nueva"
+          email_notifications:
+            on_failure: [ "${var.correo_alertas}" ]
+          parameters:
+            - { name: catalogo, default: "${var.catalogo}" }
+            - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+            - { name: modelo_llm, default: "${var.modelo_llm}" }
+            - { name: modelo_embeddings, default: "${var.modelo_embeddings}" }
+            - { name: endpoint_vector_search, default: "${var.endpoint_vector_search}" }
+            - { name: umbral_similitud, default: "${var.umbral_similitud}" }
+          tasks:
+            - task_key: enviar_ficha_nueva
+              notebook_task:
+                notebook_path: src/01_generar_fichas_sinteticas.py
+                base_parameters: { reemplazar: "no", solo_ficha_nueva: "si" }
+            - task_key: pipeline_incremental
+              depends_on: [ { task_key: enviar_ficha_nueva } ]
+              pipeline_task: { pipeline_id: "${resources.pipelines.pipeline_fichas.id}" }
+            - task_key: detectar_duplicados_y_conflictos
+              depends_on: [ { task_key: pipeline_incremental } ]
+              notebook_task: { notebook_path: src/04_detectar_duplicados_y_conflictos.py }
+
+        # Demostración en vivo: el CRM entrega una carga con estatus nulos y se activa el protocolo de contingencia.
+        demo_falla_de_calidad:
+          name: "Gobierno de indicadores · Demo: falla de calidad en el CRM"
+          email_notifications:
+            on_failure: [ "${var.correo_alertas}" ]
+          parameters:
+            - { name: catalogo, default: "${var.catalogo}" }
+            - { name: prefijo_esquemas, default: "${var.prefijo_esquemas}" }
+            - { name: modelo_llm, default: "${var.modelo_llm}" }
+            - { name: aprobar_reglas_automaticamente, default: "${var.aprobar_reglas_automaticamente}" }
+          tasks:
+            - task_key: simular_carga_defectuosa
+              notebook_task:
+                notebook_path: src/02_generar_datos_fuentes.py
+                base_parameters: { simular_falla_calidad: "si" }
+            - task_key: reglas_de_calidad
+              depends_on: [ { task_key: simular_carga_defectuosa } ]
+              notebook_task: { notebook_path: src/08_reglas_de_calidad.py }
+
+  # Plantilla del entorno del cliente: complete los valores y despliegue con -t cliente.
+  # cliente:
+  #   mode: production
+  #   workspace:
+  #     host: https://<su-workspace>.azuredatabricks.net
+  #     # Sin root_path en /Workspace/Shared: el código queda bajo el service principal que despliega (solo él lo modifica).
+  #     # Desplieguen desde CI/CD autenticados como ese service principal.
+  #   run_as:
+  #     service_principal_name: <application-id-del-service-principal>
+  #   presets:
+  #     tags:
+  #       proyecto: gobierno_indicadores
+  #       ambiente: prod
+  #       area_negocio: gobierno_de_datos
+  #       responsable: <equipo_datos>
+  #       centro_costos: <centro_de_costos>
+  #   variables:
+  #     catalogo: <su_catalogo>
+  #     warehouse_id: <id_de_su_sql_warehouse>
+  #     grupo_revisores: <grupo_de_revisores>
+  #     grupo_aprobadores: <grupo_de_data_owners_y_stewards>   # grupos de la cuenta, no locales del workspace
+  #     grupo_stewards: <grupo_de_data_stewards>
+  #     grupo_operacion: <grupo_de_operacion>
+  #     id_indicador_alerta_kpi: <id_del_indicador>
+  #     meta_indicador_alerta_kpi: "<meta>"
+  #     warehouse_id_costos: ""                               # ID solo si el warehouse es exclusivo de la solución
+  #     estado_alertas: PAUSED                                # cambiar a UNPAUSED tras la primera publicación
+  #     correo_alertas: <correo_de_un_usuario_del_workspace>   # para listas de distribución: destination_id en resources/alertas.yml
+  #     tabla_frescura: <catalogo>.<esquema>.<tabla_de_origen>
+  #     columna_frescura: <columna_de_fecha_de_carga>
+  #     tablas_origen_calidad: [ <catalogo>.<esquema>.<tabla_1>, <catalogo>.<esquema>.<tabla_2> ]

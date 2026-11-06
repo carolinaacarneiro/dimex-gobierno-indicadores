@@ -1,0 +1,29 @@
+# Pipeline declarativo (Lakeflow Spark Declarative Pipelines, serverless) que lee las fichas PDF:
+#   bronze.fichas_parseadas      -> ai_parse_document (texto y estructura del PDF)
+#   silver.fichas_estructuradas  -> ai_extract (6 bloques de la plantilla) + ai_classify (dominio)
+#   silver.fichas_vigentes       -> última versión de cada ficha, con chequeos de completitud
+# Referencia: https://learn.microsoft.com/es-es/azure/databricks/ldp/
+resources:
+  pipelines:
+    pipeline_fichas:
+      name: "Gobierno de indicadores · Lectura de fichas"
+      permissions:
+        - group_name: ${var.grupo_operacion}
+          level: CAN_VIEW
+      catalog: ${var.catalogo}
+      schema: ${var.prefijo_esquemas}_silver
+      serverless: true
+      channel: CURRENT
+      continuous: false
+      root_path: ../src/pipeline
+      libraries:
+        - glob:
+            include: ../src/pipeline/transformaciones/**
+      configuration:
+        fichas.catalogo: ${var.catalogo}
+        fichas.prefijo_esquemas: ${var.prefijo_esquemas}
+        fichas.ruta_fichas: /Volumes/${var.catalogo}/${var.prefijo_esquemas}_landing/fichas_indicadores/recibidas
+        fichas.ruta_configuracion: ${workspace.file_path}/src/config
+      notifications:
+        - email_recipients: [ "${var.correo_alertas}" ]
+          alerts: [ on-update-failure, on-update-fatal-failure ]

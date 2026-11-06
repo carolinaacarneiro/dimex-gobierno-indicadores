@@ -1,0 +1,29 @@
+# Dashboards AI/BI. Las consultas usan nombres de tabla sin calificar; el catálogo y el esquema se fijan aquí.
+# Las consultas se ejecutan con los permisos de cada usuario (embed_credentials: false): cada grupo ve solo lo que
+# tiene otorgado (notebook 12_otorgar_permisos).
+# Referencia: https://learn.microsoft.com/es-es/azure/databricks/dev-tools/bundles/resources
+resources:
+  dashboards:
+    # Consumidores y revisores: catálogo, revisión, indicadores y calidad
+    dashboard_gobierno:
+      display_name: "Gobierno de indicadores de negocio"
+      file_path: ../dashboards/gobierno_indicadores.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      dataset_catalog: ${var.catalogo}
+      dataset_schema: ${var.prefijo_esquemas}_gold
+      embed_credentials: false
+      permissions:
+        - group_name: ${var.grupo_revisores}
+          level: CAN_RUN
+
+    # Operación: costos, auditoría de decisiones y avisos de gobierno
+    dashboard_operacion:
+      display_name: "Gobierno de indicadores · Operación (costos y auditoría)"
+      file_path: ../dashboards/operacion_indicadores.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+      dataset_catalog: ${var.catalogo}
+      dataset_schema: ${var.prefijo_esquemas}_gold
+      embed_credentials: false
+      permissions:
+        - group_name: ${var.grupo_operacion}
+          level: CAN_RUN

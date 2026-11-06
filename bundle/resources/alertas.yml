@@ -1,0 +1,121 @@
+# Alertas de Databricks SQL para la operación (se evalúan con el SQL warehouse de la solución).
+# user_email debe ser un usuario del workspace. Para listas de distribución, Teams o webhooks, un administrador crea un
+# destino de notificación y se reemplaza `- user_email: ...` por `- destination_id: <id_del_destino>`.
+# Referencia: https://learn.microsoft.com/es-es/azure/databricks/sql/user/alerts/
+resources:
+  alerts:
+
+    # Protocolo de contingencia: algún indicador quedó en pausa por una regla de calidad crítica.
+    alerta_contingencia_calidad:
+      display_name: "Gobierno de indicadores · Protocolo de contingencia activado"
+      warehouse_id: ${var.warehouse_id}
+      query_text: |
+        SELECT count(*) AS indicadores_en_pausa
+        FROM ${var.catalogo}.${var.prefijo_esquemas}_gold.estado_publicacion_indicadores
+        WHERE NOT publicar
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source:
+          name: indicadores_en_pausa
+        threshold:
+          value:
+            double_value: 0
+        notification:
+          subscriptions:
+            - user_email: ${var.correo_alertas}
+      schedule:
+        quartz_cron_schedule: "0 15 * * * ?"
+        timezone_id: America/Mexico_City
+        pause_status: ${var.estado_alertas}
+
+    # Frescura: las citas del CRM no tienen una carga nueva en las últimas N horas.
+    alerta_frescura_fuentes:
+      display_name: "Gobierno de indicadores · Fuente sin carga reciente"
+      warehouse_id: ${var.warehouse_id}
+      query_text: |
+        SELECT timestampdiff(HOUR, max(${var.columna_frescura}), current_timestamp()) AS horas_sin_carga
+        FROM ${var.tabla_frescura}
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source:
+          name: horas_sin_carga
+        threshold:
+          value:
+            double_value: ${var.horas_maximas_sin_carga}
+        notification:
+          subscriptions:
+            - user_email: ${var.correo_alertas}
+      schedule:
+        quartz_cron_schedule: "0 0 10 * * ?"
+        timezone_id: America/Mexico_City
+        pause_status: ${var.estado_alertas}
+
+    # Valor de negocio: el indicador elegido (en la demo, IND-001 · Tasa de Conversión de Cita Efectiva) quedó por debajo de la meta.
+    alerta_meta_conversion_citas:
+      display_name: "Gobierno de indicadores · Indicador ${var.id_indicador_alerta_kpi} por debajo de la meta"
+      warehouse_id: ${var.warehouse_id}
+      query_text: |
+        SELECT round(valor, 2) AS valor_ultimo_mes
+        FROM ${var.catalogo}.${var.prefijo_esquemas}_gold.serie_mensual_indicadores
+        WHERE id_indicador = '${var.id_indicador_alerta_kpi}' AND mes = date_trunc('MONTH', add_months(current_date(), -1))
+      evaluation:
+        comparison_operator: LESS_THAN
+        source:
+          name: valor_ultimo_mes
+        threshold:
+          value:
+            double_value: ${var.meta_indicador_alerta_kpi}
+        notification:
+          subscriptions:
+            - user_email: ${var.correo_alertas}
+      schedule:
+        quartz_cron_schedule: "0 0 9 2 * ?"
+        timezone_id: America/Mexico_City
+        pause_status: ${var.estado_alertas}
+
+    # Proceso: hallazgos de prioridad alta sin resolver por más de N días.
+    alerta_revision_atrasada:
+      display_name: "Gobierno de indicadores · Hallazgos de prioridad alta sin resolver"
+      warehouse_id: ${var.warehouse_id}
+      query_text: |
+        SELECT count(*) AS hallazgos_atrasados
+        FROM ${var.catalogo}.${var.prefijo_esquemas}_gold.hallazgos_revision
+        WHERE estado = 'PENDIENTE' AND prioridad = 'Alta'
+          AND fecha_deteccion < current_timestamp() - INTERVAL ${var.dias_maximos_revision} DAYS
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source:
+          name: hallazgos_atrasados
+        threshold:
+          value:
+            double_value: 0
+        notification:
+          subscriptions:
+            - user_email: ${var.correo_alertas}
+      schedule:
+        quartz_cron_schedule: "0 0 9 ? * MON"
+        timezone_id: America/Mexico_City
+        pause_status: ${var.estado_alertas}
+
+    # Costo: consumo diario de la solución por encima del umbral (USD a precio de lista).
+    alerta_costo_diario:
+      display_name: "Gobierno de indicadores · Costo diario por encima del umbral"
+      warehouse_id: ${var.warehouse_id}
+      query_text: |
+        SELECT coalesce(sum(costo_lista_usd), 0) AS costo_ayer_usd
+        FROM ${var.catalogo}.${var.prefijo_esquemas}_gold.costos_solucion
+        WHERE usage_date = current_date() - INTERVAL 1 DAY
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source:
+          name: costo_ayer_usd
+        threshold:
+          value:
+            double_value: ${var.umbral_costo_diario_usd}
+        notification:
+          subscriptions:
+            - user_email: ${var.correo_alertas}
+      schedule:
+        quartz_cron_schedule: "0 0 10 * * ?"
+        timezone_id: America/Mexico_City
+        pause_status: ${var.estado_alertas}

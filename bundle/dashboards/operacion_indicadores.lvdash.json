@@ -1,0 +1,352 @@
+{
+ "datasets": [
+  {
+   "name": "ds_decisiones",
+   "displayName": "Decisiones de revisión",
+   "queryLines": [
+    "SELECT d.fecha_decision, d.revisor, h.tipo_hallazgo, h.id_ficha, h.id_ficha_relacionada, d.decision, d.id_ficha_oficial\n",
+    "FROM decisiones_revision d JOIN hallazgos_revision h USING (id_hallazgo) ORDER BY d.fecha_decision DESC\n"
+   ]
+  },
+  {
+   "name": "ds_costos",
+   "displayName": "Costo de la solución",
+   "queryLines": [
+    "SELECT usage_date, producto, sum(dbus) AS dbus, sum(costo_lista_usd) AS costo_lista_usd FROM costos_solucion GROUP BY ALL\n"
+   ]
+  },
+  {
+   "name": "ds_avisos",
+   "displayName": "Avisos de publicación",
+   "queryLines": [
+    "SELECT fecha, notebook, tipo, objeto, detalle FROM avisos_publicacion ORDER BY fecha DESC\n"
+   ]
+  }
+ ],
+ "pages": [
+  {
+   "name": "p_auditoria",
+   "displayName": "Auditoría",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layout": [
+    {
+     "widget": {
+      "name": "tb3",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_decisiones",
+         "fields": [
+          {
+           "name": "fecha_decision",
+           "expression": "`fecha_decision`"
+          },
+          {
+           "name": "revisor",
+           "expression": "`revisor`"
+          },
+          {
+           "name": "tipo_hallazgo",
+           "expression": "`tipo_hallazgo`"
+          },
+          {
+           "name": "id_ficha",
+           "expression": "`id_ficha`"
+          },
+          {
+           "name": "id_ficha_relacionada",
+           "expression": "`id_ficha_relacionada`"
+          },
+          {
+           "name": "decision",
+           "expression": "`decision`"
+          },
+          {
+           "name": "id_ficha_oficial",
+           "expression": "`id_ficha_oficial`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 1,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "fecha_decision",
+          "displayName": "Fecha",
+          "title": "Fecha"
+         },
+         {
+          "fieldName": "revisor",
+          "displayName": "Revisor",
+          "title": "Revisor"
+         },
+         {
+          "fieldName": "tipo_hallazgo",
+          "displayName": "Tipo",
+          "title": "Tipo"
+         },
+         {
+          "fieldName": "id_ficha",
+          "displayName": "Ficha",
+          "title": "Ficha"
+         },
+         {
+          "fieldName": "id_ficha_relacionada",
+          "displayName": "Ficha relacionada",
+          "title": "Ficha relacionada"
+         },
+         {
+          "fieldName": "decision",
+          "displayName": "Decisión",
+          "title": "Decisión"
+         },
+         {
+          "fieldName": "id_ficha_oficial",
+          "displayName": "Ficha oficial",
+          "title": "Ficha oficial"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Decisiones registradas (auditoría)"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 8
+     }
+    },
+    {
+     "widget": {
+      "name": "tb6",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_avisos",
+         "fields": [
+          {
+           "name": "fecha",
+           "expression": "`fecha`"
+          },
+          {
+           "name": "notebook",
+           "expression": "`notebook`"
+          },
+          {
+           "name": "tipo",
+           "expression": "`tipo`"
+          },
+          {
+           "name": "objeto",
+           "expression": "`objeto`"
+          },
+          {
+           "name": "detalle",
+           "expression": "`detalle`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 1,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "fecha",
+          "displayName": "Fecha",
+          "title": "Fecha"
+         },
+         {
+          "fieldName": "notebook",
+          "displayName": "Notebook",
+          "title": "Notebook"
+         },
+         {
+          "fieldName": "tipo",
+          "displayName": "Tipo",
+          "title": "Tipo"
+         },
+         {
+          "fieldName": "objeto",
+          "displayName": "Objeto",
+          "title": "Objeto"
+         },
+         {
+          "fieldName": "detalle",
+          "displayName": "Detalle",
+          "title": "Detalle"
+         }
+        ]
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Acciones de gobierno no aplicadas (etiquetas, certificación, permisos)"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 8,
+      "width": 6,
+      "height": 6
+     }
+    }
+   ]
+  },
+  {
+   "name": "p_costos",
+   "displayName": "Costos",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layout": [
+    {
+     "widget": {
+      "name": "t2",
+      "multilineTextboxSpec": {
+       "lines": [
+        "## Costo de la solución",
+        "Consumo de la solución según `system.billing.usage` (etiquetas de los jobs y pipelines), valorizado a precio de lista. Los datos de facturación pueden tardar algunas horas."
+       ]
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 6,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "l2",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_costos",
+         "fields": [
+          {
+           "name": "usage_date",
+           "expression": "`usage_date`"
+          },
+          {
+           "name": "costo_lista_usd",
+           "expression": "SUM(`costo_lista_usd`)"
+          },
+          {
+           "name": "producto",
+           "expression": "`producto`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "line",
+       "encodings": {
+        "x": {
+         "fieldName": "usage_date",
+         "scale": {
+          "type": "temporal"
+         }
+        },
+        "y": {
+         "fieldName": "costo_lista_usd",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "color": {
+         "fieldName": "producto",
+         "scale": {
+          "type": "categorical"
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "Costo diario a precio de lista (USD) por producto"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 2,
+      "width": 6,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "b3",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_costos",
+         "fields": [
+          {
+           "name": "producto",
+           "expression": "`producto`"
+          },
+          {
+           "name": "dbus",
+           "expression": "SUM(`dbus`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "dbus",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "y": {
+         "fieldName": "producto",
+         "scale": {
+          "type": "categorical",
+          "sort": {
+           "by": "x-reversed"
+          }
+         }
+        }
+       },
+       "frame": {
+        "showTitle": true,
+        "title": "DBU por producto (últimos 90 días)"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 8,
+      "width": 6,
+      "height": 5
+     }
+    }
+   ]
+  }
+ ]
+}

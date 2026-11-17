@@ -19,7 +19,7 @@ responsables para decidir, y publica el resultado en Unity Catalog como **catál
 | `05_Solucion_de_problemas_y_FAQ` | Errores conocidos y preguntas frecuentes | Cuando algo no funcione |
 | `06_Referencias` | Documentación oficial usada | De consulta |
 | `bundle/` | Todo el código como *bundle* (Declarative Automation Bundles, antes Databricks Asset Bundles): `databricks.yml`, `resources/`, `src/`, `app/`, `dashboards/` | Para desplegar |
-| `notebooks/` | Los notebooks en formato `.ipynb` y su fuente `.py` (idénticos a los de `bundle/src/`), para leerlos sin desplegar | De consulta |
+| `notebooks/` | Los notebooks en formato `.ipynb` (mismo código que los `.py` de `bundle/src/`; solo un formato por notebook para que la carpeta se pueda clonar como Git folder en Databricks), con sus módulos auxiliares (`config/`, `herramientas/`, `datos_ejemplo/`), para leerlos o ejecutarlos uno a uno sin desplegar el bundle. Importen la carpeta completa y ejecuten en orden, empezando por `00_preparar_entorno` | De consulta / ejecución manual |
 
 ## Orden recomendado de lectura
 
